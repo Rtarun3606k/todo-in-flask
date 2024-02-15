@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todo| home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+        <style>
+            ::placeholder {
+  color: red;
+  opacity: 1; /* Firefox */
+}
+.alt{
+
+    width: 192%;
+}
+
+.todo:hover .options {
+            display: block;
+        }
+        .options {
+            display: none;
+        }
+@media screen and (max-width: 600px){
+    .alt{
+
+        width: 110%;
+        /* background: red; */
+    }
+}
+        </style>
+</head>
+
+<body style="background-color: black; color: white;">
+    <nav class="navbar bg-dark border-bottom border-body " data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand">TODO'S</a>
+          <form class="d-flex"  action="/search" >
+            <input class="form-control me-2" type="search" name="query"  placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+          <div style="display: flex; align-items: center; justify-content: center; padding: auto;">
+            <p style="color: aliceblue; padding: 0% 12%;">Welcome home {{name}}</p>
+            <a href="/logout"><button class="btn btn-danger">logout</button></a>
+          </div>
+         
+        </div>
+      </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <h3></h3>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+<div class="form" style="width: 56%;
+display: flex;
+justify-content: center;
+align-items: center;" >
+    <form action="/home" method="POST">
+    <div class="mb-3 alt" >
+        <label for="exampleFormControlInput1" class="form-label  ">Todo Name</label>
+        <input type="text" class="form-control bg-dark border-bottom border-body alt" name="todo" id="exampleFormControlInput1"  style="color: white; @media screen and (max-width: 600px){
+                width: 135%;
+        };
+        opacity: 1;"  placeholder="task">
+      </div>
+      <div class="mb-3 alt">
+        <label for="exampleFormControlInput1" class="form-label">Todo Description</label>
+      <textarea style=" color: white;" type="text" class="form-control bg-dark border-bottom alt border-body" name="desc"  placeholder="description" ></textarea>
+      </div>
+
+
+<div style="display: flex;align-items: center; justify-content: center; gap: 4rem;">
+    <div style="display: flex;align-items: center; justify-content: center; gap: 0.5rem;">
+    <label for="exampleFormControlInput1" class="form-label"  > Priority</label>
+      <select name="pry"  class="form-select bg-dark border-bottom border-body" aria-label="Default select example" style="color: white;">
+        <option selected value="high">high</option>
+        <option value="low">low</option>
+      </select>
+    </div>
+      <button type="submit" class="btn btn-success">submit</button>
+    </div>
+    </form>
+</div>
+
+<h1>Todo List</h1>
+<ul>
+    {% for todo in todos %}
+    <li class="todo">
+        {{ todo.todo_task }}
+        <div class="options">
+            <a href="/todo/update/{{todo.id}}">Edit</a>
+            <a href="/todo/delete/{{todo.id}}">Delete</a>
+            <!-- Add more options as needed -->
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">task</th>
+                <th scope="col">desc</th>
+                <th scope="col">date created</th>
+
+                <th scope="col">status</th>
+                <th scope="col">update</th>
+                <th scope="col">delete</th>
+                <th scope="col">change Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            
+
+            {% for todo in todos %}
+            {% if todo.todo_pry==True %}
+            {% if todo.todo_status==True %}
+            <tr style="text-decoration: line-through;">
+                {% else %}
+            <tr style="background-color: rgb(247, 241, 241);">
+                {% endif %}
+                <th scope="row">{{loop.index}}</th>
+                <td>{{todo.todo_task}}</td>
+
+                <td>{{todo.todo_desc}}</td>
+                <td>{{todo.date_created }}</td>
+                {% if todo.todo_status==True %}
+
+                <td><a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">undone</button></a></td>
+                <td><button disabled class="btn btn-primary">update</button></td>
+                {% else %}
+                <td><a href="/todo/done/{{todo.id}}"><button class="btn btn-success">done</button></a></td>
+                <td><a href="/todo/update/{{todo.id}}"><button class="btn btn-primary">update</button></a></td>
+                {% endif %}
+                <td><a href="/todo/delete/{{todo.id}}"><button class="btn btn-danger">delete</button></a></td>
+                <td><a href="/todo/change/{{todo.id}}"><button class="btn btn-danger"> {% if todo.todo_pry==True %}
+                            high {{todo.todo_pry}}
+                            {% else %}
+                            low {{todo.todo_pry}}
+                            {% endif %} change Priority</button></a></td>
+
+
+            </tr>
+            {% else %}
+            
+            {% endif %}
+            {% endfor %}
+
+
+
+            {% for todo in todos %}
+            {% if todo.todo_pry==False %}
+            {% if todo.todo_status==True %}
+            <tr style="text-decoration: line-through;">
+                {% else %}
+            <tr style="background-color: rgb(247, 241, 241);">
+                {% endif %}
+                <th scope="row">{{loop.index}}</th>
+                <td>{{todo.todo_task}}</td>
+
+                <td>{{todo.todo_desc}}</td>
+                <td>{{todo.date_created }}</td>
+                {% if todo.todo_status==True %}
+
+                <td><a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">undone</button></a></td>
+                <td><button disabled class="btn btn-primary">update</button></td>
+                {% else %}
+                <td><a href="/todo/done/{{todo.id}}"><button class="btn btn-success">done</button></a></td>
+                <td><a href="/todo/update/{{todo.id}}"><button class="btn btn-primary">update</button></a></td>
+                {% endif %}
+                <td><a href="/todo/delete/{{todo.id}}"><button class="btn btn-danger">delete</button></a></td>
+                <td><a href="/todo/change/{{todo.id}}"><button class="btn btn-danger"> {% if todo.todo_pry==True %}
+                            high {{todo.todo_pry}}
+                            {% else %}
+                            low {{todo.todo_pry}}
+                            {% endif %} change Priority</button></a></td>
+
+
+            </tr>
+            {% endif %}
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+
+    <script>
+        // function check(){
+        // st = document.getElementById('status').innerHTML
+        // if (st==='True'){
+        //     document.getElementById("status").innerHTML = "New text!";
+        // }}
+        // setInterval(check(),1000)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<h1>Search Results for "{{ query }}"</h1>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+<form action="/search">
+    <input type="text" name="query" id="">
+    <button type="submit">submit</button>
+  </form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">task</th>
+            <th scope="col">desc</th>
+            <th scope="col">date created</th>
+            
+            <th scope="col">status</th>
+            <th scope="col">update</th>
+            <th scope="col">delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for todo in results %}
+        {% if todo.todo_status==True %}
+        <tr style="text-decoration: line-through;">
+            {% else %}
+            <tr style="background-color: rgb(247, 241, 241);">
+                {% endif %}
+                <th scope="row">{{loop.index}}</th>
+                <td>{{todo.todo_task}}</td>
+                
+                <td>{{todo.todo_desc}}</td>
+                <td>{{todo.date_created }}</td>
+                {% if todo.todo_status==True %}
+                
+                <td ><a href="/todo/undone/{{todo.id}}"><button   class="btn btn-secondary">undone</button></a></td>
+                <td><button disabled class="btn btn-primary">update</button></td>
+                {% else %}
+                <td><a href="/todo/done/{{todo.id}}"><button class="btn btn-success">done</button></a></td>
+                <td><a href="/todo/update/{{todo.id}}"><button class="btn btn-primary">update</button></a></td>
+                {% endif %}
+                <td><a href="/todo/delete/{{todo.id}}"><button class="btn btn-danger">delete</button></a></td>
+                <td><a href="/todo/changesr/{{todo.id}}"><button class="btn btn-danger"> {% if todo.todo_pry==True %}
+                    high {{todo.todo_pry}}
+                    {% else %}
+                    low {{todo.todo_pry}}
+                    {% endif %} change Priority</button></a></td>
+                
+                
+            </tr>
+            
+            
+            {% endfor %}
+        </tbody>
+    </table>

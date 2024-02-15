@@ -7,7 +7,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///active_database.db"
+#app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///active_database.db"
+
+app.config['SQLALCHEMY_DATABASE_URI']=postgresql://fl0user:vg2txbzP8wYA@ep-white-sun-a11thfri.ap-southeast-1.aws.neon.fl0.io/database
+
+
 app.config['SQLALCHEMY_TRACK_NOTIFICATIONS']= False
 app.secret_key = "secreate_key"
 app.config['UPLOADED_PHOTOS_DEST']='static'

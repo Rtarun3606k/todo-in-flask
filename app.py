@@ -7,9 +7,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///active_database.db"
+# app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///active_database.db"
 
-app.config['SQLALCHEMY_DATABASE_URI']="postgresql://fl0user:vg2txbzP8wYA@ep-white-sun-a11thfri.ap-southeast-1.aws.neon.fl0.io:5432/database"
+# app.config['SQLALCHEMY_DATABASE_URI']="postgresql://fl0user:vg2txbzP8wYA@ep-white-sun-a11thfri.ap-southeast-1.aws.neon.fl0.io:5432/database"
+app.config['SQLALCHEMY_DATABASE_URI']="postgresql://fl0user:sE3atNvoL4bu@ep-soft-boat-a1mzgth3.ap-southeast-1.aws.neon.fl0.io:5432/database?sslmode=require"
 
 
 app.config['SQLALCHEMY_TRACK_NOTIFICATIONS']= False
@@ -28,7 +29,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.Text(), nullable=False)
     todos = db.relationship('todo', backref='user', lazy=True)
 
     def set_password(self, password):

@@ -10,47 +10,145 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-        <style>
-            ::placeholder {
-  color: red;
-  opacity: 1; /* Firefox */
-}
-.alt{
+    <style>
+        ::placeholder {
+            color: red;
+            opacity: 1;
+            /* Firefox */
+        }
 
-    width: 192%;
-}
+        .form {
+            width: 56%;
+        }
 
-.todo:hover .options {
+        .alt {
+
+            width: 192%;
+        }
+
+        .todo:hover .options {
             display: block;
         }
-        .options {
-            display: none;
-        }
-@media screen and (max-width: 600px){
-    .alt{
 
-        width: 110%;
-        /* background: red; */
-    }
-}
-        </style>
+        .options {
+            /* display: flex; */
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            margin: -4% 2%;
+            margin: 0% 3%;
+        }
+
+        .box {
+            width: 60%;
+            justify-content: center;
+            align-items: center;
+            background: #76747440;
+
+            padding: 3% 3%;
+            border-radius: 2rem;
+            transition: 500ms ease-in-out;
+            margin-top: 4%;
+            position: relative;
+            border: 2px solid #000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .loading-line {
+            position: absolute;
+            top: -2px;
+            /* Adjust this value to match the border width */
+            left: -2px;
+            /* Adjust this value to match the border width */
+            width: 100%;
+            height: 4px;
+            /* Adjust this value to match the border width */
+            background-color: #000;
+            animation: animateLine 2s linear infinite;
+        }
+
+        .nd,
+        .box {
+            display: flex;
+
+
+
+        }
+
+
+        .box:hover {
+            transform: scale(1.04);
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 0%;
+            width: 100%;
+            padding: 0% 1%;
+            margin-top: -3%;
+        }
+
+        .clo {
+            background: black;
+            color: white;
+        }
+
+        .edit-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @media screen and (max-width: 600px) {
+            .form {
+                width: 93%;
+            }
+            .options{
+                margin: 0 10%;
+            }
+
+            .alt {
+
+                width: 110%;
+                /* background: red; */
+            }
+            .btns{
+                flex-direction: row;
+                gap: 1rem;
+            }
+            .details{
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
 <body style="background-color: black; color: white;">
     <nav class="navbar bg-dark border-bottom border-body " data-bs-theme="dark">
         <div class="container-fluid">
-          <a class="navbar-brand">TODO'S</a>
-          <form class="d-flex"  action="/search" >
-            <input class="form-control me-2" type="search" name="query"  placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-          <div style="display: flex; align-items: center; justify-content: center; padding: auto;">
-            <p style="color: aliceblue; padding: 0% 12%;">Welcome home {{name}}</p>
-            <a href="/logout"><button class="btn btn-danger">logout</button></a>
-          </div>
-         
+            <a class="navbar-brand">TODO'S</a>
+            <form class="d-flex" action="/search">
+                <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <div style="display: flex; align-items: center; justify-content: center; padding: auto;">
+                <p style="color: aliceblue; padding: 0% 12%;">Welcome home {{name}}</p>
+                <a href="/logout"><button class="btn btn-danger">logout</button></a>
+            </div>
+
         </div>
-      </nav>
+    </nav>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
@@ -62,149 +160,240 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
-<div class="form" style="width: 56%;
+
+
+
+
+
+    <div class="form" style="
 display: flex;
 justify-content: center;
-align-items: center;" >
-    <form action="/home" method="POST">
-    <div class="mb-3 alt" >
-        <label for="exampleFormControlInput1" class="form-label  ">Todo Name</label>
-        <input type="text" class="form-control bg-dark border-bottom border-body alt" name="todo" id="exampleFormControlInput1"  style="color: white; @media screen and (max-width: 600px){
+align-items: center;">
+        <form action="/home" method="POST">
+            <div class="mb-3 alt">
+                <label for="exampleFormControlInput1" class="form-label  ">Todo Name</label>
+                <input type="text" class="form-control bg-dark border-bottom border-body alt" name="todo"
+                    id="exampleFormControlInput1" style="color: white; @media screen and (max-width: 600px){
                 width: 135%;
         };
-        opacity: 1;"  placeholder="task">
-      </div>
-      <div class="mb-3 alt">
-        <label for="exampleFormControlInput1" class="form-label">Todo Description</label>
-      <textarea style=" color: white;" type="text" class="form-control bg-dark border-bottom alt border-body" name="desc"  placeholder="description" ></textarea>
-      </div>
+        opacity: 1;" placeholder="task">
+            </div>
+            <div class="mb-3 alt">
+                <label for="exampleFormControlInput1" class="form-label">Todo Description</label>
+                <textarea style=" color: white;" type="text" class="form-control bg-dark border-bottom alt border-body"
+                    name="desc" placeholder="description"></textarea>
+            </div>
 
 
-<div style="display: flex;align-items: center; justify-content: center; gap: 4rem;">
-    <div style="display: flex;align-items: center; justify-content: center; gap: 0.5rem;">
-    <label for="exampleFormControlInput1" class="form-label"  > Priority</label>
-      <select name="pry"  class="form-select bg-dark border-bottom border-body" aria-label="Default select example" style="color: white;">
-        <option selected value="high">high</option>
-        <option value="low">low</option>
-      </select>
+            <div style="display: flex;align-items: center; justify-content: center; gap: 4rem;">
+                <div style="display: flex;align-items: center; justify-content: center; gap: 0.5rem;">
+                    <label for="exampleFormControlInput1" class="form-label"> Priority</label>
+                    <select name="pry" class="form-select bg-dark border-bottom border-body"
+                        aria-label="Default select example" style="color: white;">
+                        <option selected value="high">high</option>
+                        <option value="low">low</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">submit</button>
+            </div>
+        </form>
     </div>
-      <button type="submit" class="btn btn-success">submit</button>
-    </div>
-    </form>
-</div>
-
-<h1>Todo List</h1>
-<ul>
-    {% for todo in todos %}
-    <li class="todo">
-        {{ todo.todo_task }}
-        <div class="options">
-            <a href="/todo/update/{{todo.id}}">Edit</a>
-            <a href="/todo/delete/{{todo.id}}">Delete</a>
-            <!-- Add more options as needed -->
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">task</th>
-                <th scope="col">desc</th>
-                <th scope="col">date created</th>
-
-                <th scope="col">status</th>
-                <th scope="col">update</th>
-                <th scope="col">delete</th>
-                <th scope="col">change Priority</th>
-            </tr>
-        </thead>
-        <tbody>
 
 
-            
 
+    <center>
+        <section class="sec">
             {% for todo in todos %}
             {% if todo.todo_pry==True %}
             {% if todo.todo_status==True %}
-            <tr style="text-decoration: line-through;">
-                {% else %}
-            <tr style="background-color: rgb(247, 241, 241);">
-                {% endif %}
-                <th scope="row">{{loop.index}}</th>
-                <td>{{todo.todo_task}}</td>
+            <div class="box"
+                style=" text-decoration: line-through; padding: 3% 3%; border-radius: 2rem; flex-direction: column; ">
 
-                <td>{{todo.todo_desc}}</td>
-                <td>{{todo.date_created }}</td>
-                {% if todo.todo_status==True %}
-
-                <td><a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">undone</button></a></td>
-                <td><button disabled class="btn btn-primary">update</button></td>
                 {% else %}
-                <td><a href="/todo/done/{{todo.id}}"><button class="btn btn-success">done</button></a></td>
-                <td><a href="/todo/update/{{todo.id}}"><button class="btn btn-primary">update</button></a></td>
-                {% endif %}
-                <td><a href="/todo/delete/{{todo.id}}"><button class="btn btn-danger">delete</button></a></td>
-                <td><a href="/todo/change/{{todo.id}}"><button class="btn btn-danger"> {% if todo.todo_pry==True %}
-                            high {{todo.todo_pry}}
+                <div class="box " style=" padding: 3% 3%; border-radius: 2rem; flex-direction: column;">
+
+                    {% endif %}
+                    <div class="details 1st "
+                        style="display: flex; justify-content: space-between; align-items: center; height: 5%;">
+                        {% if todo.todo_pry==True %}
+                        <p>priority: <samp style="color: red;" class="dynamic-text">important!</samp></p>
+                        {% else %}
+                        <p>priority: Low</p>
+                        {% endif %}
+                        <p>date created: {{todo.date_created}}</p>
+                        <div class="btns" style="display: flex; gap: 2rem;">
+                        <div>
+                            {% if todo.todo_status==True %}
+                            <a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">Unone</button></a>
+
                             {% else %}
-                            low {{todo.todo_pry}}
-                            {% endif %} change Priority</button></a></td>
+                            <a href="/todo/done/{{todo.id}}"><button class="btn btn-success">Done</button></a>
+
+                            {% endif %}
+                        </div>
+                        <div class="todo"><button class="btn btn-warning edit-container">Settings</button>
+                            <div class="options">
+                                <div class="otp "
+                                    style="display: flex; flex-direction: row; align-items: flex-start; gap: 0.5rem; margin-left: -70%;">
+                                    <a href="/todo/update/{{todo.id}}"><button class="btn clo ">Edit</button></a>
+                                    <a href="/todo/delete/{{todo.id}}"><button class="btn clo "
+                                            style="color: red;">Delete</button></a>
+                                    <a href="/todo/change/{{todo.id}}"><button class="btn clo ">high
+                                            pry</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
-            </tr>
-            {% else %}
-            
+                    </div>
+
+                    <hr style="color: white; border: 2px solid; width: 101%;">
+                    <div class="nd">
+                        <div class="b1" style="text-align: left;">
+                            <h2 class="task" style="text-align: left;">{{todo.todo_task}}</h2>
+                            <p>{{todo.todo_desc}}</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             {% endif %}
             {% endfor %}
-
 
 
             {% for todo in todos %}
             {% if todo.todo_pry==False %}
             {% if todo.todo_status==True %}
-            <tr style="text-decoration: line-through;">
+
+            <div class="box"
+                style=" text-decoration: line-through; padding: 3% 3%; border-radius: 2rem; flex-direction: column; ">
+
                 {% else %}
-            <tr style="background-color: rgb(247, 241, 241);">
-                {% endif %}
-                <th scope="row">{{loop.index}}</th>
-                <td>{{todo.todo_task}}</td>
+                <div class="box " style=" padding: 3% 3%; border-radius: 2rem; flex-direction: column;">
 
-                <td>{{todo.todo_desc}}</td>
-                <td>{{todo.date_created }}</td>
-                {% if todo.todo_status==True %}
+                    {% endif %}
+                    <div class="details 1st "
+                        style="display: flex; justify-content: space-between; align-items: center; height: 5%;">
+                        {% if todo.todo_pry==True %}
+                        <p>priority: <samp style="color: red;" class="dynamic-text">important!</samp></p>
+                        {% else %}
+                        <p>priority: <samp style="color: yellow;" class="dynamic-text">Low!</samp></p>
+                        {% endif %}
+                        <p>date created: {{todo.date_created}}</p>
+                        <div class="btns" style="display: flex; gap: 2rem;">
 
-                <td><a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">undone</button></a></td>
-                <td><button disabled class="btn btn-primary">update</button></td>
-                {% else %}
-                <td><a href="/todo/done/{{todo.id}}"><button class="btn btn-success">done</button></a></td>
-                <td><a href="/todo/update/{{todo.id}}"><button class="btn btn-primary">update</button></a></td>
-                {% endif %}
-                <td><a href="/todo/delete/{{todo.id}}"><button class="btn btn-danger">delete</button></a></td>
-                <td><a href="/todo/change/{{todo.id}}"><button class="btn btn-danger"> {% if todo.todo_pry==True %}
-                            high {{todo.todo_pry}}
-                            {% else %}
-                            low {{todo.todo_pry}}
-                            {% endif %} change Priority</button></a></td>
+                            <div>
+                                {% if todo.todo_status==True %}
+                                <a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">Unone</button></a>
+
+                                {% else %}
+                                <a href="/todo/done/{{todo.id}}"><button class="btn btn-success">Done</button></a>
+
+                                {% endif %}
+                            </div>
+                            <div class="todo"><button class="btn btn-warning edit-container">Settings</button>
+                                <div class="options">
+                                    <div class="otp "
+                                        style="display: flex; flex-direction: row; align-items: flex-start; gap: 0.5rem; margin-left: -70%;">
+                                        <a href="/todo/update/{{todo.id}}"><button class="btn clo ">Edit</button></a>
+                                        <a href="/todo/delete/{{todo.id}}"><button class="btn clo "
+                                                style="color: red;">Delete</button></a>
+                                        <a href="/todo/change/{{todo.id}}"><button class="btn clo ">high
+                                                pry</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
-            </tr>
+                    </div>
+
+                    <hr style="color: white; border: 2px solid; width: 101%;">
+                    <div class="nd">
+                        <div class="b1" style="text-align: left;">
+                            <h2 class="task" style="text-align: left;">{{todo.todo_task}}</h2>
+                            <p>{{todo.todo_desc}}</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
             {% endif %}
             {% endfor %}
 
-        </tbody>
-    </table>
+
+        </section>
+    </center>
+
 
 
     <script>
-        // function check(){
-        // st = document.getElementById('status').innerHTML
-        // if (st==='True'){
-        //     document.getElementById("status").innerHTML = "New text!";
-        // }}
-        // setInterval(check(),1000)
+        function oscillateFontSize() {
+            const dynamicTexts = document.querySelectorAll('.dynamic-text');
+            let scaleFactor = 1.1; // Scale factor for increasing/decreasing font size
+
+            dynamicTexts.forEach(text => {
+                let currentSize = parseFloat(window.getComputedStyle(text).fontSize);
+
+                // Increase font size if it's less than or equal to 32px, otherwise decrease it
+                if (currentSize <= 16) {
+                    currentSize *= scaleFactor; // Increase font size
+                } else {
+                    currentSize /= scaleFactor; // Decrease font size
+                }
+
+                text.style.fontSize = currentSize + 'px';
+            });
+        }
+
+        // Call oscillateFontSize function every 500 milliseconds (0.5 second)
+        // setInterval(oscillateFontSize, 500);
+
+        // JavaScript to toggle display of options when more-options button is clicked
+        const moreOptionsButtons = document.querySelectorAll('.more-options');
+        moreOptionsButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.nextElementSibling.classList.toggle('show');
+            });
+        });
+
+
+
+
+        const editContainer = document.querySelector('.edit-container');
+        const editDialogs = document.querySelectorAll('.edit-dialog');
+
+        // Function to show the edit dialog
+        function showDialog(dialog) {
+            dialog.style.display = 'block';
+        }
+
+        // Function to hide all edit dialogs
+        function hideDialogs() {
+            editDialogs.forEach(dialog => {
+                dialog.style.display = 'none';
+            });
+        }
+
+        // Event listener for dynamically generated edit buttons
+        editContainer.addEventListener('click', function (event) {
+            const editButton = event.target.closest('.edit-button');
+            if (editButton) {
+                hideDialogs();
+                const dialog = editButton.nextElementSibling;
+                showDialog(dialog);
+            }
+        });
+
+        // Hide the dialog when clicking outside any dialog
+        window.addEventListener('click', function (event) {
+            if (!event.target.closest('.edit-dialog')) {
+                hideDialogs();
+            }
+        });
+
     </script>
 </body>
 

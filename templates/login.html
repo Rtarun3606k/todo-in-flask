@@ -33,6 +33,17 @@
 				<form class="login100-form validate-form" action="/login" method="POST">
 					<span class="login100-form-title">
 						Member Login
+						{% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        
+                           <p style="color: red;"> {{message}}</p>
+                            
+                        
+                       
+                        {% endfor %}
+                        {% endif %}
+                        {%endwith%}
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">

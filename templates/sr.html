@@ -1,58 +1,264 @@
-<h1>Search Results for "{{ query }}"</h1>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<style>
+    ::placeholder {
+        color: red;
+        opacity: 1;
+        /* Firefox */
+    }
 
-<form action="/search">
-    <input type="text" name="query" id="">
-    <button type="submit">submit</button>
-  </form>
+    .form {
+        width: 56%;
+    }
+
+    .alt {
+
+        width: 192%;
+    }
+
+    .todo:hover .options {
+        display: block;
+    }
+
+    .options {
+        /* display: flex; */
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        margin: -4% 2%;
+        margin: 0% 3%;
+    }
+
+    .box {
+        width: 60%;
+        justify-content: center;
+        align-items: center;
+        background: #76747440;
+
+        padding: 3% 3%;
+        border-radius: 2rem;
+        transition: 500ms ease-in-out;
+        margin-top: 4%;
+        position: relative;
+        border: 2px solid #000;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+
+    .loading-line {
+        position: absolute;
+        top: -2px;
+        /* Adjust this value to match the border width */
+        left: -2px;
+        /* Adjust this value to match the border width */
+        width: 100%;
+        height: 4px;
+        /* Adjust this value to match the border width */
+        background-color: #000;
+        animation: animateLine 2s linear infinite;
+    }
+
+    .nd,
+    .box {
+        display: flex;
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">task</th>
-            <th scope="col">desc</th>
-            <th scope="col">date created</th>
+
+    }
+
+
+    .box:hover {
+        transform: scale(1.04);
+    }
+
+    .details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 0%;
+        width: 100%;
+        padding: 0% 1%;
+        margin-top: -3%;
+    }
+
+    .clo {
+        background: black;
+        color: white;
+    }
+
+    .edit-dialog {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    @media screen and (max-width: 600px) {
+        .form {
+            width: 93%;
+        }
+        .options{
+            margin: 0 10%;
+        }
+
+        .alt {
+
+            width: 110%;
+            /* background: red; */
+        }
+        .btns{
+            flex-direction: row;
+            gap: 1rem;
+        }
+        .details{
+            flex-direction: column;
+        }
+    }
+</style>
+<body style="background-color: black; color: white;">
+    <nav class="navbar bg-dark border-bottom border-body " data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand">TODO'S</a>
+            <form class="d-flex" action="/search">
+                <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <div style="display: flex; align-items: center; justify-content: center; padding: auto;">
+                <p style="color: aliceblue; padding: 0% 12%;">Welcome home {{name}}</p>
+                <a href="/logout"><button class="btn btn-danger">logout</button></a>
+            </div>
             
-            <th scope="col">status</th>
-            <th scope="col">update</th>
-            <th scope="col">delete</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        {% for todo in results %}
-        {% if todo.todo_status==True %}
-        <tr style="text-decoration: line-through;">
-            {% else %}
-            <tr style="background-color: rgb(247, 241, 241);">
-                {% endif %}
-                <th scope="row">{{loop.index}}</th>
-                <td>{{todo.todo_task}}</td>
-                
-                <td>{{todo.todo_desc}}</td>
-                <td>{{todo.date_created }}</td>
-                {% if todo.todo_status==True %}
-                
-                <td ><a href="/todo/undone/{{todo.id}}"><button   class="btn btn-secondary">undone</button></a></td>
-                <td><button disabled class="btn btn-primary">update</button></td>
+        </div>
+    </nav>
+    <center>
+    <h1>Search Results for "{{ query }}"</h1>           
+            {% for todo in results %}
+            {% if todo.todo_pry==True %}
+            {% if todo.todo_status==True %}
+            <div class="box"
+                style=" text-decoration: line-through; padding: 3% 3%; border-radius: 2rem; flex-direction: column; ">
+
                 {% else %}
-                <td><a href="/todo/done/{{todo.id}}"><button class="btn btn-success">done</button></a></td>
-                <td><a href="/todo/update/{{todo.id}}"><button class="btn btn-primary">update</button></a></td>
-                {% endif %}
-                <td><a href="/todo/delete/{{todo.id}}"><button class="btn btn-danger">delete</button></a></td>
-                <td><a href="/todo/changesr/{{todo.id}}"><button class="btn btn-danger"> {% if todo.todo_pry==True %}
-                    high {{todo.todo_pry}}
-                    {% else %}
-                    low {{todo.todo_pry}}
-                    {% endif %} change Priority</button></a></td>
-                
-                
-            </tr>
-            
-            
+                <div class="box " style=" padding: 3% 3%; border-radius: 2rem; flex-direction: column;">
+
+                    {% endif %}
+                    <div class="details 1st "
+                        style="display: flex; justify-content: space-between; align-items: center; height: 5%;">
+                        {% if todo.todo_pry==True %}
+                        <p>priority: <samp style="color: red;" class="dynamic-text">important!</samp></p>
+                        {% else %}
+                        <p>priority: Low</p>
+                        {% endif %}
+                        <p>date created: {{todo.date_created}}</p>
+                        <div class="btns" style="display: flex; gap: 2rem;">
+                        <div>
+                            {% if todo.todo_status==True %}
+                            <a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">Unone</button></a>
+
+                            {% else %}
+                            <a href="/todo/done/{{todo.id}}"><button class="btn btn-success">Done</button></a>
+
+                            {% endif %}
+                        </div>
+                        <div class="todo"><button class="btn btn-warning edit-container">Settings</button>
+                            <div class="options">
+                                <div class="otp "
+                                    style="display: flex; flex-direction: row; align-items: flex-start; gap: 0.5rem; margin-left: -70%;">
+                                    <a href="/todo/update/{{todo.id}}"><button class="btn clo ">Edit</button></a>
+                                    <a href="/todo/delete/{{todo.id}}"><button class="btn clo "
+                                            style="color: red;">Delete</button></a>
+                                    <a href="/todo/change/{{todo.id}}"><button class="btn clo ">high
+                                            pry</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    </div>
+
+                    <hr style="color: white; border: 2px solid; width: 101%;">
+                    <div class="nd">
+                        <div class="b1" style="text-align: left;">
+                            <h2 class="task" style="text-align: left;">{{todo.todo_task}}</h2>
+                            <p>{{todo.todo_desc}}</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             {% endfor %}
-        </tbody>
+
+
+            {% for todo in results %}
+            {% if todo.todo_pry==False %}
+            {% if todo.todo_status==True %}
+
+            <div class="box"
+                style=" text-decoration: line-through; padding: 3% 3%; border-radius: 2rem; flex-direction: column; ">
+
+                {% else %}
+                <div class="box " style=" padding: 3% 3%; border-radius: 2rem; flex-direction: column;">
+
+                    {% endif %}
+                    <div class="details 1st "
+                        style="display: flex; justify-content: space-between; align-items: center; height: 5%;">
+                        {% if todo.todo_pry==True %}
+                        <p>priority: <samp style="color: red;" class="dynamic-text">important!</samp></p>
+                        {% else %}
+                        <p>priority: <samp style="color: yellow;" class="dynamic-text">Low!</samp></p>
+                        {% endif %}
+                        <p>date created: {{todo.date_created}}</p>
+                        <div class="btns" style="display: flex; gap: 2rem;">
+
+                            <div>
+                                {% if todo.todo_status==True %}
+                                <a href="/todo/undone/{{todo.id}}"><button class="btn btn-secondary">Unone</button></a>
+
+                                {% else %}
+                                <a href="/todo/done/{{todo.id}}"><button class="btn btn-success">Done</button></a>
+
+                                {% endif %}
+                            </div>
+                            <div class="todo"><button class="btn btn-warning edit-container">Settings</button>
+                                <div class="options">
+                                    <div class="otp "
+                                        style="display: flex; flex-direction: row; align-items: flex-start; gap: 0.5rem; margin-left: -70%;">
+                                        <a href="/todo/update/{{todo.id}}"><button class="btn clo ">Edit</button></a>
+                                        <a href="/todo/delete/{{todo.id}}"><button class="btn clo "
+                                                style="color: red;">Delete</button></a>
+                                        <a href="/todo/change/{{todo.id}}"><button class="btn clo ">high
+                                                pry</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <hr style="color: white; border: 2px solid; width: 101%;">
+                    <div class="nd">
+                        <div class="b1" style="text-align: left;">
+                            <h2 class="task" style="text-align: left;">{{todo.todo_task}}</h2>
+                            <p>{{todo.todo_desc}}</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}</center>
+
+
+      
     </table>

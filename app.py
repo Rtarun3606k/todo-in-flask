@@ -10,7 +10,8 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///active_database.db"
 
 # app.config['SQLALCHEMY_DATABASE_URI']="postgresql://fl0user:vg2txbzP8wYA@ep-white-sun-a11thfri.ap-southeast-1.aws.neon.fl0.io:5432/database"
-app.config['SQLALCHEMY_DATABASE_URI']="postgresql://fl0user:sE3atNvoL4bu@ep-soft-boat-a1mzgth3.ap-southeast-1.aws.neon.fl0.io:5432/database?sslmode=require"
+# app.config['SQLALCHEMY_DATABASE_URI']="postgresql://fl0user:sE3atNvoL4bu@ep-soft-boat-a1mzgth3.ap-southeast-1.aws.neon.fl0.io:5432/database?sslmode=require"
+app.config['SQLALCHEMY_DATABASE_URI']="postgresql://r.tarunnayaka25042005:NI9Odhun6xWG@ep-delicate-resonance-a1afqwgy.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
 
 
 app.config['SQLALCHEMY_TRACK_NOTIFICATIONS']= False
@@ -269,7 +270,7 @@ def search():
     else:
         results = [] 
 
-    return render_template('sr.html', query=query, results=results)
+    return render_template('sr.html', query=query, results=results,name=current_user.username)
 
 
 
